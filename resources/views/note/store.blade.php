@@ -8,16 +8,26 @@
             style="background-color: #282b30;">
             @csrf
             <h2 class="mb-3">Create task</h2>
-            <hr/>
+            <hr />
             <div class="mb-3">
                 <label for="title" class="form-label">Title:</label>
                 <input type="text" class="form-control" id="title" name="title">
             </div>
+            @error('title')
+                <div class="alert alert-danger mx-auto" role="alert">
+                    {{ $message }}
+                </div>
+            @enderror
 
             <div class="mb-3">
                 <label for="description" class="form-label">Description:</label>
                 <input type="text" class="form-control" id="description" name="description">
             </div>
+            @error('description')
+                <div class="alert alert-danger mx-auto" role="alert">
+                    {{ $message }}
+                </div>
+            @enderror
 
             <button type="submit" class="btn btn-primary">Add note</button>
         </form>
