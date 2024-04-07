@@ -14,6 +14,12 @@ class NoteController extends Controller
         return view('note.index', compact('notes'));
     }
 
+    public function show($id)
+    {
+        $note = Note::findOrFail($id);
+        return view('note.show', compact('note'));
+    }
+
     public function store(Request $request)
     {
         try {
@@ -33,17 +39,24 @@ class NoteController extends Controller
         }
     }
 
-    public function show($id)
-    {
-        $note = Note::findOrFail($id);
-        return view('note.show', compact('note'));
-    }
-
     public function update(Request $request, int $id)
     {
         try {
             $note = Note::findOrFail($id);
             $note->update($request->all());
+
+            return redirect()->route('note.index');
+        } catch (Exception $ex) {
+            $message = $ex->getMessage();
+            return view('error', compact('message'));
+        }
+    }
+
+    public function destroy(int $id)
+    {
+        try {
+            $note = Note::findOrFail($id);
+            $note->delete();
 
             return redirect()->route('note.index');
         } catch (Exception $ex) {

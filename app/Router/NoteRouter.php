@@ -13,5 +13,6 @@ class NoteRouter
         Route::post('/', [NoteController::class, 'store'])->name('note.store');
         Route::put('/{id}', [NoteController::class, 'update'])->name('note.update');
         Route::get('/{id}', [NoteController::class, 'show'])->name('note.show');
+        Route::delete('/{id}', [NoteController::class, 'destroy'])->name('note.destroy');
     }
 }
