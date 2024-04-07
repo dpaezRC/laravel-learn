@@ -41,7 +41,9 @@
                 </tbody>
             </table>
         @else
-            <p>no data available...</p>
+            <div class="alert alert-primary" role="alert">
+                No data available...
+            </div>
         @endif
     </div>
 @endsection

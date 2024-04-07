@@ -4,34 +4,38 @@ namespace App\Http\Controllers;
 
 use Exception;
 use App\Models\Note;
+use Illuminate\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 
 class NoteController extends Controller
 {
-    public function index()
+    public function index(): View
     {
         $notes = Note::all();
         return view('note.index', compact('notes'));
     }
 
-    public function show($id)
+    public function show($id): View
     {
         $note = Note::findOrFail($id);
         return view('note.show', compact('note'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse | View
     {
         try {
+            $request->validate([
+                'title' => 'required|max:255|min:3',
+                'description' => 'required|max:255|min:3'
+            ]);
+
             $newNote = [
                 'title' => $request->title,
                 'description' => $request->description
             ];
-
-            if (!$newNote['title']) throw new Exception('Title is required.');
-            if (!$newNote['description']) throw new Exception('Description is required.');
-
             Note::create($newNote);
+
             return redirect()->route('note.index');
         } catch (Exception $ex) {
             $message = $ex->getMessage();
@@ -39,9 +43,14 @@ class NoteController extends Controller
         }
     }
 
-    public function update(Request $request, int $id)
+    public function update(Request $request, int $id): RedirectResponse
     {
         try {
+            $request->validate([
+                'title' => 'required|max:255|min:3',
+                'description' => 'required|max:255|min:3'
+            ]);
+
             $note = Note::findOrFail($id);
             $note->update($request->all());
 
@@ -52,7 +61,7 @@ class NoteController extends Controller
         }
     }
 
-    public function destroy(int $id)
+    public function destroy(int $id): RedirectResponse
     {
         try {
             $note = Note::findOrFail($id);
