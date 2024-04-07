@@ -28,7 +28,10 @@
                         <tr>
                             <th scope="row">{{ $note->title }}</th>
                             <td scope="row">{{ $note->description }}</td>
-                            <td>-</td>
+                            <td>
+                                <a class="btn btn-primary" style="text-decoration: none; color: white;"
+                                    href="{{ route('note.show', $note->id) }}">Editar</a>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
