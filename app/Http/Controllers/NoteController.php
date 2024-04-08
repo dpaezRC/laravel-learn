@@ -5,62 +5,66 @@ namespace App\Http\Controllers;
 use Exception;
 use App\Models\Note;
 use App\Http\Requests\NoteRequest;
-use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\JsonResponse;
 
 class NoteController extends Controller
 {
-    public function index(): View
+    public function index(): JsonResponse
     {
         $notes = Note::all();
-        return view('note.index', compact('notes'));
+        return response()->json($notes);
     }
 
-    public function show($id): View
-    {
-        $note = Note::findOrFail($id);
-        return view('note.show', compact('note'));
-    }
-
-    public function store(NoteRequest $request): RedirectResponse
+    public function show($id): JsonResponse
     {
         try {
-            $newNote = [
-                'title' => $request->title,
-                'description' => $request->description
-            ];
-            Note::create($newNote);
 
-            return redirect()->route('note.index')->with('success', 'Note created!');
+            $note = Note::find($id);
+            if (!$note) throw new Exception('Note not found');
+            return response()->json($note);
         } catch (Exception $ex) {
             $message = $ex->getMessage();
-            return redirect()->route('note.index')->with('error', $message);
+            return response()->json(compact('message'));
         }
     }
 
-    public function update(NoteRequest $request, int $id): RedirectResponse
+    public function store(NoteRequest $request): JsonResponse
     {
         try {
-            $note = Note::findOrFail($id);
+            $newNote = Note::create($request->all());
+
+            return response()->json($newNote);
+        } catch (Exception $ex) {
+            $message = $ex->getMessage();
+            return response()->json(compact('message'));
+        }
+    }
+
+    public function update(NoteRequest $request, int $id): JsonResponse
+    {
+        try {
+            $note = Note::find($id);
+            if (!$note) throw new Exception('Note not found');
             $note->update($request->all());
 
-            return redirect()->route('note.index')->with('success', 'Note updated!');
+            return response()->json($note);
         } catch (Exception $ex) {
             $message = $ex->getMessage();
-            return redirect()->route('note.index')->with('error', $message);
+            return response()->json(compact('message'));
         }
     }
 
-    public function destroy(int $id): RedirectResponse
+    public function destroy(int $id): JsonResponse
     {
         try {
-            $note = Note::findOrFail($id);
+            $note = Note::find($id);
+            if (!$note) throw new Exception('Note not found');
             $note->delete();
 
-            return redirect()->route('note.index')->with('success', 'Note deleted!');
+            return response()->json($note);
         } catch (Exception $ex) {
             $message = $ex->getMessage();
-            return redirect()->route('note.index')->with('error', $message);
+            return response()->json(compact('message'));
         }
     }
 }

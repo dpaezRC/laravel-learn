@@ -17,8 +17,3 @@ use App\Http\Controllers\NoteController;
 |
 */
 
-
-Route::get('/', [NoteController::class, 'index'])->name('note.index');
-Route::prefix('note')->group(fn () => NoteRouter::routes());
-
-// Route::resource('/category', CategoryController::class);
