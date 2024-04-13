@@ -13,20 +13,7 @@ class UserSeeder extends Seeder
     {
         DB::table('users')->truncate();
 
-        $users = [
-            [
-                'name' => 'Admin',
-                'email' => 'admin@example.com',
-                'password' => Hash::make('password'),
-            ],
-            [
-                'name' => 'Usuario',
-                'email' => 'usuario@example.com',
-                'password' => Hash::make('password'),
-            ],
-        ];
-
-
-        User::insert($users);
+        $recordQuantity = 5;
+        User::factory($recordQuantity)->create();
     }
 }
