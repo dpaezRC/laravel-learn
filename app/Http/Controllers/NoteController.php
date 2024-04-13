@@ -5,23 +5,25 @@ namespace App\Http\Controllers;
 use Exception;
 use App\Models\Note;
 use App\Http\Requests\NoteRequest;
+use App\Http\Resources\NoteResource;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class NoteController extends Controller
 {
-    public function index(): JsonResponse
+    public function index(): JsonResource
     {
         $notes = Note::all();
-        return response()->json($notes);
+        return  NoteResource::collection($notes);
     }
 
-    public function show($id): JsonResponse
+    public function show($id): JsonResponse | JsonResource
     {
         try {
-
             $note = Note::find($id);
             if (!$note) throw new Exception('Note not found');
-            return response()->json($note);
+
+            return new NoteResource($note);
         } catch (Exception $ex) {
             $message = $ex->getMessage();
             return response()->json(compact('message'));
